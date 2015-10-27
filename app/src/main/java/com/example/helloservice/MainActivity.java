@@ -1,25 +1,27 @@
 package com.example.helloservice;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 
+
 public class MainActivity extends AppCompatActivity
         implements SeekBar.OnSeekBarChangeListener {
     private static final String TAG = "MainActivity";
     Button btnPlay, btnStop;
+    private Handler mHanler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mHanler = new Handler();
         btnPlay = (Button) findViewById(R.id.button);
         btnStop = (Button) findViewById(R.id.button2);
 
@@ -83,6 +85,48 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-
+        mHanler.removeCallbacks(mUpdateTimeTask);
     }
+
+    private String milliSecondsToTimer(long milliseconds){
+        String secondsString = "";
+        // Convert total duration into time
+        int minutes = (int) (milliseconds / (1000 * 60));
+        int seconds = (int) (milliseconds % (1000 * 60));
+        secondsString = (seconds > 10) ? (""+seconds) : ("0"+seconds);
+
+        return (minutes + " : " + secondsString);
+    }
+
+    public void updateProgressBar(){
+        mHanler.postDelayed(mUpdateTimeTask, 500);
+    }
+
+    private Runnable mUpdateTimeTask = new Runnable() {
+        @Override
+        public void run() {
+
+
+
+            mHanler.postDelayed(this, 500);
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
